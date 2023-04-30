@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/static/css/detail.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="/static/font/css/tuan.css" /
+</head>
+<body>
+    <div id="container">
+        <div class="container__body">
+            <div class="container__video" id="videoChapter">
+               
+            </div>
+            <div class="container__video__option">
+                <div class="video__option__time">
+                    <div class="video__option__timeLoad">
+                        <div class="video__option__timeNow">
+                            <div class="option__timeNow__end">
+    
+                            </div>
+                        </div>
+                    </div>            
+                </div>
+                <div class="video__option__setup">
+                    <div class="option__setup__video">
+                        <div class="setup__video__listIcon">
+                            <div class="video__listIcon__icon pause-play" >
+                                <div class="icon__detail">
+                                    <i class="icon-play"></i>
+                                </div>
+                            </div>
+                            <div class="video__listIcon__icon prevTenSecond">
+                                <div class="icon__detail">
+                                    <i class="fa-solid fa-rotate-left"></i>
+                                </div>
+                            </div>
+                            <div class="video__listIcon__icon nextTenSecond">
+                                <div class="icon__detail">
+                                    <i class="fa-solid fa-rotate-right"></i>
+                                </div>
+                            </div>
+                            <div class="video__listIcon__icon volumn">
+                                <div class="icon__detail">
+                                    <i class="icon-volume-up-1"></i>
+                                </div>
+                                <div class="volumn__setup">
+                                    <div class="volumn__setup__volumnAll">
+                                        <div class="volumn__setup__volumnNow">
+                                            <div class="volumn__setup__volumnEnd">
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="option__name" id="nameChapterSetup">
+                       
+                    </div>
+                    <div class="option__setup__about">
+                        <div class="video__listIcon__icon">
+                            <div class="icon__detail">
+                                <i class="icon-popup"></i>
+                            </div>
+                            <div class="listChapterHover"></div>
+                            <div class="listChapterFilm">
+                                <div id="listChapterFilm__container">
+                                   
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video__listIcon__icon">
+                            <div class="icon__detail">
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <div class="RateHover"></div>
+                            <div class="RateChapter">
+                                <div id="RateChapter__container">
+                                    <h1>Rating</h1>
+                                    <div class="rating">
+                                        <span class="star" data-value="1">&#9733;</span>
+                                        <span class="star" data-value="2">&#9733;</span>
+                                        <span class="star" data-value="3">&#9733;</span>
+                                        <span class="star" data-value="4">&#9733;</span>
+                                        <span class="star" data-value="5">&#9733;</span>
+                                      </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="video__listIcon__icon">
+                            <div class="icon__detail">
+                                <i class="icon-play"></i>
+                            </div>
+                        </div>
+                        <div class="video__listIcon__icon fullScreen">
+                            <div class="icon__detail">
+                                <i class="icon-fullScreen"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="loading">
+                <div class="loading__icon">
+                    <i class="icon-reload"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    var rating=0;
+    var watchedTime=0;
+    if(localStorage.getItem("Token")){
+
+        GetHistoryByChapterIDAndUserLogin();
+        GetChapterListByChapterID();
+    }
+    else{
+        window.location="/Login";
+    }
+    
+    function GetHistoryByChapterIDAndUserLogin(){
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() 
+        {
+            if(xhttp.status==200)
+            {
+                var historyUserJson=xhttp.responseText
+                var historyUser= JSON.parse(historyUserJson)
+                rating=historyUser.Rate;
+                watchedTime=historyUser.WatchedTime;
+                document.querySelectorAll('.star').forEach(function(star) {
+                   
+                    var children = star.parentNode.children;
+                   
+                    for(let i=0; i<children.length; i++) {
+                        if(i<rating) {
+                        children[i].classList.add('active');
+                        } else {
+                        children[i].classList.remove('active');
+                        }
+                    }
+                });
+               
+            }else if(xhttp.status=204){
+                PostHistoryByChapterIDAndUserLogin();
+            }
+            else if(xhttp.status=401)
+            {
+                localStorage.removeItem("Token");
+                window.location="/Login";
+            }
+            else if(xhttp.status=403)
+            {
+                localStorage.removeItem("Token");
+                window.location="/Login";
+            }
+        }         
+        //khai báo phương thức và đường dẫn để request
+        xhttp.open("GET", "/ApiV1/HistoryByChapterIDAndUserLogin/"+window.location.pathname.substring(13),false);
+        //định dạng gửi đi787
+        xhttp.setRequestHeader("Content-type","application/json")
+        token = localStorage.getItem("Token");
+        authorization ='Bearer '+token
+        xhttp.setRequestHeader("Authorization",authorization);
+        xhttp.send();
+    }  
+    function GetChapterListByChapterID(){
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() 
+        {
+            if(xhttp.status==200)
+            {
+                var filmJson=xhttp.responseText
+                var film= JSON.parse(filmJson)
+                
+                var CategoryList=film.chapters;
+                var CategoryFilmElement = document.getElementById('videoChapter');
+                var CategoryFilmNameElement = document.getElementById('nameChapterSetup');
+                var CategoryFilmNameHtml='';
+                var CategoryFilmListElement = document.getElementById('listChapterFilm__container');
+                var CategoryFilmListHtml='<div class="listChapterFilm__header"><h1>'+film.FilmName+'</h1></div><div class="listChapterFilm__body"><ul class="listChapter">';
+                var CategoryFilmHtml='';
+                for(var i = 0;i<CategoryList.length;i++)
+                {
+                    CategoryFilmListHtml+='<li ';
+
+                    
+                    if(CategoryList[i].id== parseInt(window.location.pathname.substring(13))){
+                        CategoryFilmListHtml+='class="selectedChapter"';
+                        CategoryFilmHtml+=' <video src="'+CategoryList[i].Video+'" autoplay ></video>';
+                        CategoryFilmNameHtml+='<p>Tập'+CategoryList[i].ChapterNumber+' :<span>'+CategoryList[i].ChapterName+'</span></p>';
+                    }
+                    CategoryFilmListHtml+='><div class="ChapterDetail__header"><p>'+(i+1)+' <span>'+CategoryList[i].ChapterName+'</span></p></div><div class="ChapterDetail__content"><div class="ChapterDetail__content__img"><a href="/DetailVideo/'+CategoryList[i].id+'"><img src="'+CategoryList[i].ChapterImage+'" alt=""></a></div><div class="ChapterDetail__content__Des"><p>'+CategoryList[i].ChapterDescription+'</p></div></div></li>';
+                }
+                CategoryFilmListHtml+='</ul></div>';
+                CategoryFilmElement.innerHTML = CategoryFilmHtml;
+                CategoryFilmNameElement.innerHTML=CategoryFilmNameHtml;
+                CategoryFilmListElement.innerHTML=CategoryFilmListHtml;
+            }
+            else if(xhttp.status==401)
+            {
+                localStorage.removeItem("Token");
+                window.location="/Login";
+            }
+            else if(xhttp.status==403)
+            {
+                localStorage.removeItem("Token");
+                window.location="/Login";
+            }
+        }         
+        //khai báo phương thức và đường dẫn để request
+        xhttp.open("GET", "/ApiV1/FilmChapterIDChapterID/"+window.location.pathname.substring(13),false);
+        //định dạng gửi đi787
+        xhttp.setRequestHeader("Content-type","application/json")
+        token = localStorage.getItem("Token");
+        authorization ='Bearer '+token
+        xhttp.setRequestHeader("Authorization",authorization);
+        xhttp.send();
+    }    
+    function PostHistoryByChapterIDAndUserLogin(){
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() 
+        {
+            if(xhttp.status==200)
+            {
+               
+            }
+            else if(xhttp.status=401)
+            {
+                localStorage.removeItem("Token");
+                window.location="/Login";
+            }
+            else if(xhttp.status=403)
+            {
+                localStorage.removeItem("Token");
+                window.location="/Login";
+            }
+        }         
+ 
+        xhttp.open("POST", "/ApiV1/HistoryByChapterIDAndUserLogin/"+window.location.pathname.substring(13),false);
+        //định dạng gửi đi787
+        xhttp.setRequestHeader("Content-type","application/json")
+        token = localStorage.getItem("Token");
+        authorization ='Bearer '+token
+        xhttp.setRequestHeader("Authorization",authorization);
+        xhttp.send();
+    }  
+    function ChangeRateHistoryByChapterIDAndUserLogin(){
+        
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() 
+        {
+            if(xhttp.status==200)
+            {
+               
+            }
+            else if(xhttp.status=401)
+            {
+                localStorage.removeItem("Token");
+                window.location="/Login";
+            }
+            else if(xhttp.status=403)
+            {
+                localStorage.removeItem("Token");
+                window.location="/Login";
+            }
+        }         
+        const historydata ={
+            Rate:rating
+        }
+        historydataJson = JSON.stringify(historydata);
+        xhttp.open("PATCH", "/ApiV1/HistoryByChapterIDAndUserLogin/"+window.location.pathname.substring(13),false);
+        //định dạng gửi đi787
+        xhttp.setRequestHeader("Content-type","application/json")
+        token = localStorage.getItem("Token");
+        authorization ='Bearer '+token
+        xhttp.setRequestHeader("Authorization",authorization);
+        xhttp.send(historydataJson);
+    }  
+    function ChangewatchedTimeHistoryByChapterIDAndUserLogin(){
+        
+        const xhttp = new XMLHttpRequest();
+        xhttp.onload = function() 
+        {
+            if(xhttp.status==200)
+            {
+               
+            }
+            else if(xhttp.status=401)
+            {
+                localStorage.removeItem("Token");
+                window.location="/Login";
+            }
+            else if(xhttp.status=403)
+            {
+                localStorage.removeItem("Token");
+                window.location="/Login";
+            }
+        }         
+        const historydata ={
+            WatchedTime:watchedTime
+        }
+        historydataJson = JSON.stringify(historydata);
+        xhttp.open("PATCH", "/ApiV1/HistoryByChapterIDAndUserLogin/"+window.location.pathname.substring(13),false);
+        //định dạng gửi đi787
+        xhttp.setRequestHeader("Content-type","application/json")
+        token = localStorage.getItem("Token");
+        authorization ='Bearer '+token
+        xhttp.setRequestHeader("Authorization",authorization);
+        xhttp.send(historydataJson);
+    }  
+    //rating event
+    const stars = document.querySelectorAll('.star');
+
+    stars.forEach(function(star) {
+    star.addEventListener('click', setclickRating);
+    star.addEventListener('mouseover', setRating);
+    star.addEventListener('mouseout', outRating);
+    });
+
+    function setclickRating(e) {
+    const value = parseInt(e.target.getAttribute('data-value'));
+    rating=e.target.getAttribute('data-value');
+    const parent = e.target.parentNode;
+    const children = parent.children;
+    for(let i=0; i<children.length; i++) {
+        if(i<value) {
+        children[i].classList.add('active');
+        } else {
+        children[i].classList.remove('active');
+        }
+    }
+
+    ChangeRateHistoryByChapterIDAndUserLogin();
+    }
+    function setRating(e) {
+        const value = parseInt(e.target.getAttribute('data-value'));
+    
+        const parent = e.target.parentNode;
+        const children = parent.children;
+
+        for(let i=0; i<children.length; i++) {
+        if(i<value) {
+            children[i].classList.add('active');
+        } else {
+            children[i].classList.remove('active');
+        }
+        }
+    }
+    function outRating(e) {
+        const value = parseInt(e.target.getAttribute('data-value'));
+        const parent = e.target.parentNode;
+        const children = parent.children;
+        
+        for(let i=0; i<children.length; i++) {
+            if(rating-1<i){
+            children[i].classList.remove('active');
+            }
+            else{
+                children[i].classList.add('active');
+            }
+        }
+    }
+  //video load
+    var videoTimeNow = document.querySelector('.video__option__timeLoad .video__option__timeNow');
+    var video = document.querySelector('.container__video video');
+    var videoTime = document.querySelector('.container__video__option .video__option__time');
+    checkTimeLoad(video.buffered.length);
+    function checkTimeLoad(buffere)
+    {
+        
+        if(buffere>0)
+        {
+            document.getElementById('loading').style.display='none';
+        }
+        else{
+            document.getElementById('loading').style.display='block';
+        }
+    }
+    var videoTimeLoad =document.querySelector('.video__option__time .video__option__timeLoad');
+    video.addEventListener('progress',()=>
+    {
+        if(video.buffered.length>0)
+        {
+
+            videoTimeLoad.style.width = (video.buffered.end(video.buffered.length-1)/video.duration)*video.videoWidth +'px';
+        }
+        
+    })
+    video.addEventListener('timeupdate',()=>{
+        console.log(watchedTime)
+        if(Math.abs(video.currentTime-watchedTime)>=2){
+            watchedTime=video.currentTime;
+            ChangewatchedTimeHistoryByChapterIDAndUserLogin();
+        }
+       
+        checkTimeLoad(video.buffered.length);
+        if(video.currentTime===video.duration){
+            document.querySelector('.video__listIcon__icon.pause-play').innerHTML='<i class="icon-pause"><i>';
+        }
+        videoTimeNow.style.width = (video.currentTime/video.duration)*videoTime.offsetWidth +'px';
+       
+    })
+    
+    videoTime.addEventListener('click',(event)=>
+    {
+        var element = event.target || event.srcElement;
+        
+        var b=event.clientX/videoTime.offsetWidth*video.duration;
+        video.currentTime=b;
+       
+    });
+
+    document.querySelector('.video__listIcon__icon.pause-play').addEventListener("click",()=>
+    {
+        var element =document.querySelector('.video__listIcon__icon.pause-play');
+        if(video.paused)
+        {
+            video.play();
+            element.innerHTML='<div class="icon__detail"><i class="icon-play"><i></div>';
+        }
+        else{
+            video.pause();
+            element.innerHTML='<div class="icon__detail"><i class="icon-pause"><i></div>';
+        }
+    })
+    document.querySelector('.video__listIcon__icon.prevTenSecond').addEventListener('click',()=>{
+        if(video.currentTime<10){
+            video.currentTime=0;
+        }else{
+            video.currentTime-=10;
+        }
+    })
+    document.querySelector('.video__listIcon__icon.nextTenSecond').addEventListener('click',()=>{
+        if(video.duration -video.currentTime<10){
+            video.currentTime=video.duration;
+        }else{
+            video.currentTime+=10;
+        }
+    })
+
+    document.querySelector(".video__listIcon__icon.fullScreen").addEventListener('click',()=>{
+        var bodyAll=document.querySelector('#container .container__body');
+        console.log(bodyAll.requestFullscreen);
+        if(document.fullscreenElement !== bodyAll){
+            bodyAll.requestFullscreen();
+            var element = event.target || event.srcElement;
+            element.parentElement.innerHTML='<div class="icon__detail"><i class="icon-smallScreen"><i></div>';
+        }else{
+
+            document.exitFullscreen();
+            var element = event.target || event.srcElement;
+            element.parentElement.innerHTML='<div class="icon__detail"><i class="icon-fullScreen"><i></div>';
+        }        
+    })
+    var volumn=document.querySelector(".video__listIcon__icon.volumn .icon__detail");
+    volumn.addEventListener('click',()=>{
+        
+        
+        if(video.muted)
+        {
+            video.muted=false;
+            volumn.innerHTML='<i class="icon-volume-up-1"><i>';
+        }else{
+            video.muted=true;
+            volumn.innerHTML='<i class="icon-volume-off-1"><i>';
+        }
+    })
+    var setupVolume=document.querySelector(".video__listIcon__icon.volumn .volumn__setup .volumn__setup__volumnAll");
+    setupVolume.addEventListener("mousedown",()=>{
+        function mouseMove(){
+            console.log(volumn.getBoundingClientRect().top- document.querySelector('#container .container__body').getBoundingClientRect().top);
+            console.log(event.pageY);
+        }
+        setupVolume.addEventListener("mousemove",mouseMove)
+        setupVolume.addEventListener("mouseup",()=>{
+            setupVolume.removeEventListener("mousemove",mouseMove);
+        })
+    }
+    )
+    var listChapter=document.querySelectorAll(".listChapterFilm__body .listChapter>li");
+    listChapter.forEach((Chapter, select) =>{
+       Chapter.addEventListener('click',()=>{
+        Chapter.querySelector('.ChapterDetail__content').style.display='flex';
+        listChapter.forEach((ChapterClearSelect, index) =>{
+            if(select!=index){
+                ChapterClearSelect.querySelector('.ChapterDetail__content').style.display='none';
+            }
+        })
+       })
+      });
+</script>
+</html>
