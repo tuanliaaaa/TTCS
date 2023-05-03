@@ -12,13 +12,16 @@ import jwt
 
 from core.settings import SECRET_KEY
 class Signup(APIView):
+
     def post(self,request):
-        
         userSerializer = UserSerializer(data=request.data)
         if userSerializer.is_valid():
             user=userSerializer.save()
             exp=datetime.now(tz=timezone.utc) + timedelta(minutes=50)
             roles=[]
+            role= Role.objects.get(pk=2)
+            userrole=UserRole(User=user,Role=role)
+            userrole.save()
             userRoles=UserRole.objects.filter(User=user)
             for userRole in userRoles:
                 roles.append(userRole.Role.RoleName)

@@ -5,17 +5,19 @@ var nexts;
 var demCategory=0;
 
 if(localStorage.getItem("Token")){
+    
     GetHotChapter();
     GetChapterRecommend();
     GetHistoryUserLogin();
     GetCategoryFilmList();
+    
     
 }
 else{
     window.location="/Login";
 }
 function LogOut(){
-    window.location="/Admin/Login";
+    window.location="/Login";
     localStorage.removeItem("Token");
 }
 function GetChapterRecommend(){
@@ -104,29 +106,38 @@ function GetCategoryFilmList(){
             var CategoryFilmHtml='';
             for(var i = 0;i<CategoryFilm.length;i++)
             {   
+              
                 if(CategoryFilm[i].films.length!=0 )
                 {
+                   
                     var countFilm=0;
                     demCategory++;
                     CategoryFilmDetailHtml='<div class="ToiecList__ToiecVideos"><div class="ToiecVideos__ToiecName"><h1>'+CategoryFilm[i].CategoryName+'</h1></div><div class="ToeicVideos__VideoList"><span class="prev"><i class="fa-solid fa-angle-left"></i></span> ';
                     for(var j=0;j<CategoryFilm[i].films.length;j++)
                     {
+                        
                         try{
-                            if(CategoryFilm[i].films[j].chapters[0].ChapterStatus=='Đã Ra')
+                            
+                            if(CategoryFilm[i].films[j].chapters[0].ChapterStatus=='Đã ra')
                             {
-                               
+                                
                                 var lastHistory='';
+                                
                                 try{
                                     lastHistory ='<div class="VideoList__Videos"><a href="/DetailVideo/'+CategoryFilm[i].films[j].chapters[0].id+'" class="Videos__video"><div class="Videos__video__content"><div class="video__content__img"><img src="'+CategoryFilm[i].films[j].chapters[0].ChapterImage+'" alt=""></div><div class="video__content__video"><video src="'+CategoryFilm[i].films[j].chapters[0].Video+'" autoplay muted="true"></video></div><div class="video__content__des"><div class="content__des__body"><div class="des__body__listIcon"><div class="listIcon__icon"><i class="fa-solid fa-play"></i></div></div><div class="des__body__title"><p>'+CategoryFilm[i].films[j].chapters[0].ChapterName+'</p><p>Thể loại: <span>'+CategoryFilm[i].CategoryName+'</span></p></div></div></div></div></a></div>';
+                                   
                                 }
                                 catch{
                                     lastHistory='';
                                 }
+                                
                                 countFilm++;
+                                
                                 for(var k=0;k<CategoryFilm[i].films[j].chapters.length;k++)
                                 {
-                                    if(CategoryFilm[i].films[i].chapters[k].ChapterStatus=='Đã Ra')
+                                      if(CategoryFilm[i].films[j].chapters[k].ChapterStatus=='Đã ra')
                                     {
+                                        
                                         if(historyUserLogin.includes(CategoryFilm[i].films[j].chapters[k].id))
                                         {
                                             
@@ -137,10 +148,12 @@ function GetCategoryFilmList(){
                                     
                                 }
                                 CategoryFilmDetailHtml+=lastHistory;
+                                
                             }
+                           
                         }
                         catch{
-
+                            
                         }
                     }
                     CategoryFilmDetailHtml+='<span class="next"><i class="fa-solid fa-angle-right"></i></span></div></div>';
@@ -158,6 +171,7 @@ function GetCategoryFilmList(){
             nexts=document.querySelectorAll('.ToeicVideos__VideoList .next');
             
             for(var i=0;i<demCategory+1;i++){
+                
 
                 checkPrevAndNext(i);
             }
@@ -186,7 +200,7 @@ function GetHotChapter(){
         if(xhttp.status==200)
         {
             
-            console.log(ChapterHot)
+           
             var ChapterHotElement = document.getElementById('ChapterHot');
             var ChapterHotHtml='';
             ChapterHotHtml+='<div class="movieHots__movie__content" id="movie__hotFirst"><div class="movie__content__img"><img src="'+ChapterHot.ChapterImage +'" alt=""></div><div class="movie__content__video"><video src="'+ChapterHot.TrailerChapter+'" autoplay="true" muted="true"></video></div></div><div class="movieHots__movie__body"><div class="movie__body__aboutMovie"><div class="aboutMovie__imgName"><img src="'+ChapterHot.Film.BannerFilmName+'" alt=""></div><div class="aboutMovie__des"><h1>Xem ngay mùa 2</h1><p>'+ChapterHot.ChapterDescription+'</p></div><div class="aboutMovie__action"><a href="/DetailVideo/'+ChapterHot.id+'" class="aboutMovie__action__play"><button><i class="fa-solid fa-play"></i> Play</button></a><button class="aboutMovie__action__infor"><i class="fa-solid fa-circle-info"></i> Thông tin khác</button></div></div></div>';
@@ -414,7 +428,7 @@ mute.addEventListener("click",()=>{
 
 let g=0;
 video.addEventListener("timeupdate",()=>{
-    console.log(document.querySelector("#movie__hotFirst .movie__content__video video").currentTime);
+   
     if(document.querySelector("#movie__hotFirst .movie__content__video video").currentTime>0){
         
     if(document.querySelector("#movie__hotFirst .movie__content__video video").currentTime>=2)
@@ -500,6 +514,7 @@ if (window.scrollY > 0) {
 var search=document.querySelector(".header__userInfor__search input");
 search.addEventListener("focus",function(){
     document.querySelector(".header__userInfor__search i:first-of-type ").classList.add("focus");
+    
 });
 search.addEventListener("blur",function(){
     document.querySelector(".header__userInfor__search i:first-of-type ").classList.remove("focus");
@@ -519,7 +534,7 @@ function mouseenterDetailVideo(e)
    
     {
         detailoutId = setTimeout(() => {
-        
+            
             element.querySelector(".video__content__img").style.opacity=0;
             element.querySelector(".video__content__video").style.opacity=1;
             element.querySelector(".video__content__video").style.height="55%"; 
@@ -583,18 +598,24 @@ eventforclickprev();
 eventforclicknext();
 function checkPrevAndNext(index){
 
-    if(check[index]==0)
-    {
-        prevs[index].style.display='none';
-        
+    try{
+
+        if(check[index]==0)
+        {
+            prevs[index].style.display='none';
+            
+        }
+        else if(check[index]==5){
+            
+            nexts[index].style.display='none';
+        }
+        else{
+            prevs[index].style.display='flex';
+            nexts[index].style.display='flex';
+        }
     }
-    else if(check[index]==5){
-        
-        nexts[index].style.display='none';
-    }
-    else{
-        prevs[index].style.display='flex';
-        nexts[index].style.display='flex';
+    catch{
+
     }
 
 }

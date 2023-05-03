@@ -43,3 +43,6 @@ class EditActor(View):
 class EditChapter(View):
     def get(self,request,ChapterID):
         return render(request,'EditChapterFilm.html')
+class DashBoard(View):
+    def get(self,request):
+        return render(request,'DashBoard.html')

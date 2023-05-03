@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import AdminLogin,UserManage,EditUser,CategoryManage,EditCategory,AddCategory,FilmManage,EditFilm,AddFilm,AddChapterByFilmID,ActorManage,AddActor,EditActor,EditChapter
+from .views import AdminLogin,UserManage,EditUser,CategoryManage,EditCategory,AddCategory,FilmManage,EditFilm,AddFilm,AddChapterByFilmID,ActorManage,AddActor,EditActor,EditChapter,DashBoard
 urlpatterns = [
     path('Login', AdminLogin.as_view()),
     path('User', UserManage.as_view()),
@@ -15,5 +15,6 @@ urlpatterns = [
     path('EditFilm/<int:FilmID>',EditFilm.as_view()),
     path('EditActor/<int:ActorID>',EditActor.as_view()),
     path('EditChapter/<int:ChapterID>',EditChapter.as_view()),
+    path('Home',DashBoard.as_view())
     
 ]

@@ -21,7 +21,7 @@
                     
                      
                     <li>
-                        <a href="">Home</a>
+                        <a href="/Admin/Home">Home</a>
                     </li>
                     <li>
                        <a href="/Admin/User">User</a>                   
@@ -199,7 +199,7 @@
                         indexPageHtml+='<div class="indexPage___next" onclick="nextPage()"><p>></p></div>';
                     }
                     
-                    var tableCategoryHtml ='<thead><tr><th>CategoryID</th><th>CategoryID</th><th>Action</th></tr></thead><tbody>';
+                    var tableCategoryHtml ='<thead><tr><th>CategoryID</th><th>CategoryName</th><th>Action</th></tr></thead><tbody>';
                     for (var i =0;i<Response.length;i++){
                         tableCategoryHtml+='<tr><td>'+Response[i].id+'</td><td>'+Response[i].CategoryName+'</td><td><div class="action__Category"><div class="action__Category__Edit" ><i class="fa-solid fa-pen-to-square" onclick="editCategory('+Response[i].id+')"></i> </div><div class="action__Category__Delete"><i class="fa-solid fa-trash"onclick="Delete('+Response[i].id+')" ></i></div></div></td></tr>'
                     }

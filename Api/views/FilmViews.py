@@ -22,7 +22,6 @@ class FilmSearch(APIView):
         film = Film.objects.filter(Q(FilmName__icontains=filmSearch)|Q(chapters__ChapterName__icontains=filmSearch)|Q(chapters__ChapterDescription__icontains=filmSearch)).distinct()
         filmserializer = FilmSerializer(film,many=True)
         return Response(filmserializer.data,status=200)
-
 class AllFilm(APIView):
     @method_decorator(RoleRequest(allowedRoles=['Admin','NormalUser']))
     def get(self,request):
@@ -309,6 +308,7 @@ class ChapterByFilmID(APIView):
                 for chunk in ChapterImage.chunks():
                     f.write(chunk)
             ChapterImage=image_path[len(os.path.join(BASE_DIR)):] 
+            
         else:
             ChapterImage=''
         TrailerChapter = request.FILES.get('TrailerChapter')
@@ -339,11 +339,11 @@ class ChapterByFilmID(APIView):
                     f.write(chunk)
             Video=Video_path [len(os.path.join(BASE_DIR)):]
             Chapterstatus='Đã Ra'
-            chapterNew =  Chapter(Film=film,ChapterName=request.data['ChapterName'],ChapterDescription=request.data['ChapterDescription'],TrailerChapter=request.data['TrailerChapter'],ChapterImage=request.data['ChapterImage'],Video=request.data['Video'],ChapterStatus=Chapterstatus,ChapterCreateDay=ChapterCreateDay,ChapterPremieredDay=datetime.now())
+            chapterNew =  Chapter(Film=film,ChapterName=request.data['ChapterName'],ChapterDescription=request.data['ChapterDescription'],TrailerChapter=TrailerChapter,ChapterImage=ChapterImage,Video=Video,ChapterStatus=Chapterstatus,ChapterCreateDay=ChapterCreateDay,ChapterPremieredDay=datetime.now())
         else:
             Chapterstatus='Đang Ra'
             Video=''
-            chapterNew =  Chapter(Film=film,ChapterName=request.data['ChapterName'],ChapterDescription=request.data['ChapterDescription'],TrailerChapter=request.data['TrailerChapter'],ChapterImage=request.data['ChapterImage'],Video=request.data['Video'],ChapterStatus=Chapterstatus,ChapterCreateDay=ChapterCreateDay)
+            chapterNew =  Chapter(Film=film,ChapterName=request.data['ChapterName'],ChapterDescription=request.data['ChapterDescription'],TrailerChapter=TrailerChapter,ChapterImage=ChapterImage,Video=Video,ChapterStatus=Chapterstatus,ChapterCreateDay=ChapterCreateDay)
         chapterNew.save()
         for actor in actorList:
             actor = Actor.objects.get(pk=actor)
@@ -351,7 +351,15 @@ class ChapterByFilmID(APIView):
             actorChapter.save() 
         chapterNewSerializer = ChapterSerializer(chapterNew)
         return Response(chapterNewSerializer.data,status=201)
-
-        
+class SearchFilmPage(APIView):
+    @method_decorator(RoleRequest(allowedRoles=['Admin']))
+    def get(self,request,Filmname):
+        page = request.GET.get('page',1)
+        per_page = request.GET.get('per_page', 2) 
+        offSet = (int(page) - 1) * int(per_page)
+        limit = offSet + int(per_page)
+        filmList = Film.objects.filter(Q(FilmName__icontains=Filmname)|Q(FilmDescription=Filmname)|Q(chapters__ChapterName=Filmname))[offSet:limit]
+        filmListSerializer = FilmSerializer(filmList,many=True)
+        return Response(filmListSerializer.data,status=200)
 
     

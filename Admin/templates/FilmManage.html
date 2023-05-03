@@ -21,7 +21,7 @@
                     
                     
                     <li>
-                        <a href="">Home</a>
+                        <a href="/Admin/Home">Home</a>
                     </li>
                     <li>
                        <a href="/Admin/User">User</a>                   
@@ -165,8 +165,11 @@
                     }
                     else if(xhttp.status==403)
                     {
-                        localStorage.removeItem("Token");
-                        window.location="/Admin/Login";
+                        var ResponseJson=xhttp.responseText
+                        var Response= JSON.parse(ResponseJson)
+                        
+                       localStorage.removeItem("Token");
+                       window.location="/Admin/Login";
                     }
                 }         
                 //khai báo phương thức và đường dẫn để request

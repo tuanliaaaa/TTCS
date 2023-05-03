@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'id': {'read_only': True},
             'Password': {'write_only': True},
-            'UserName': {'read_only': True}
+            
         }
 class UserByAdminSerializer(serializers.ModelSerializer):
     class Meta:

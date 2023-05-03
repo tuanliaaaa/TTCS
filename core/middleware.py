@@ -14,6 +14,7 @@ class AuthorizationMiddleware:
             try:
                 payLoad=jwt.decode(jwtTokenPayload, SECRET_KEY, algorithms=["HS256"])
                 request.roles=payLoad['Roles']
+                
                 request.userID=payLoad['UserID']
                 
             except jwt.ExpiredSignatureError:

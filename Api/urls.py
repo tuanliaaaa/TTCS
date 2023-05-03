@@ -1,9 +1,9 @@
 from django.urls import path
 from .views.token import Token
-from .views.ChapterView import ChapterHot,FilmChapterID,RecommendView,ChapterByID
+from .views.ChapterView import ChapterHot,FilmChapterID,RecommendView,ChapterByID,ChapterHotFromDaytoDay
 from .views.UserView import Signup,AllUser,UserById,SearchUser,UserByIdForAdmin,UserByLogin,ChangePassword
 from .views.CategoryFilmView import CategoryAllFilm
-from .views.FilmViews import FilmSearch,AllFilm,FilmByID,ChapterByFilmID
+from .views.FilmViews import FilmSearch,AllFilm,FilmByID,ChapterByFilmID,SearchFilmPage
 from .views.HistoryView import HistoryUserLogin,HistoryByChapterIDAndUserLogin
 from .views.CategoryView import CategoryById,AllCategory,SearchCategory,CategoryGetAll
 from .views.ActorView import AllActor,ActorById,SearchActor,ActorGetAll
@@ -21,6 +21,7 @@ urlpatterns = [
     path('UserByLogin',UserByLogin.as_view()),
     path('UserByIDForAdmin/<int:UserID>',UserByIdForAdmin.as_view()),
     path('UserByName/<str:Username>',SearchUser.as_view()),
+    path('FilmByName/<str:Filmname>',SearchFilmPage.as_view()),
     path('ChangePassword',ChangePassword.as_view()),
     path('AllCategory',AllCategory.as_view()),
     path('AllgetCategory',CategoryGetAll.as_view()),
@@ -31,6 +32,7 @@ urlpatterns = [
     path('ChapterByFilmID/<int:FilmID>',ChapterByFilmID.as_view()),
     path('Recommend',RecommendView.as_view()),
     path("ChapterByID/<int:ChapterID>", ChapterByID.as_view()),
+    path("ChapterHotFromDaytoDay",ChapterHotFromDaytoDay.as_view()),
     path('ActorByID/<int:ActorID>',ActorById.as_view()),
     path('AllActor',AllActor.as_view()),
     path('AllgetActor',ActorGetAll.as_view()),

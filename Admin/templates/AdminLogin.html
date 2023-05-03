@@ -26,10 +26,10 @@
                         </div>
                         <div class="info">
                             <div class="info__Input">
-                                <label for="Username" >Email hoặc số điện thoại</label>
+                                <label for="Username" >Email </label>
                                 <input class="email" onkeyup="loginByEnter()" id="Username" type="text" > 
                                 <div class="username__Error Error">
-                                    <p>Vui lòng nhập email hoặc số điện thoại hợp lệ.</p>
+                                    <p>Vui lòng nhập email  hợp lệ.</p>
                                 </div>
                             </div>
                             <div class="info__Input">
@@ -62,15 +62,7 @@
                       </a>
                     <p>Login with Facebook</p>
                 </div>
-                <div class="signup">
-                    <p>New to Netflix ?</p>
-                    <a href="https://www.netflix.com/dz-en/">Sign up now</a>
-                </div>
-                <div class="more">
-                    <p>
-                        This page is protected by Google reCAPTCHA to ensure you're not a bot. <a href="#">Learn more.</a> 
-                    </p>
-                </div>
+                
 
 
             </div>
@@ -85,7 +77,7 @@
 <script>
 if(localStorage.getItem("Token")){
     window.location="/Admin/Home";
-   // window.history.back();
+
 }
 else{
 
