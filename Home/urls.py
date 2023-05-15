@@ -1,7 +1,9 @@
 from django.urls import path
+from django.shortcuts import redirect
 from .views import Home,Login,Signup,DetailVideo,image_view,video_view,UserInfor,UserChangePassword
 urlpatterns = [
-    path('Home', Home.as_view()),
+    path('', lambda request: redirect('Home')),
+    path('Home/', Home.as_view(),name='Home'),
     path('Login',Login.as_view()),
     path('Signup',Signup.as_view()),
     path('DetailVideo/<int:IDChapter>',DetailVideo.as_view()),
